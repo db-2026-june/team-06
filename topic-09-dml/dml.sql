@@ -115,8 +115,21 @@ WHERE name = 'Smachno! Kyiv Center';
 -- Delete the 'Smachno! Kyiv Podil' location
 DELETE FROM restaurant_management.locations
 WHERE name = 'Smachno! Kyiv Podil';
+-- Insert queries for the staff table
+INSERT INTO restaurant_management.staff (staff_role, first_name, last_name, middle_name, hire_date)
+VALUES ('manager', 'Olena', 'Kovalenko', 'Ivanivna', '2021-03-15'),
+    ('server', 'Dmytro', 'Bondarenko', NULL, '2022-06-01'),
+    ('kitchen', 'Iryna', 'Tkachenko', 'Petrivna', '2020-11-20'),
+    ('server', 'Andriy', 'Melnyk', NULL, '2023-02-10'),
+    ('kitchen', 'Kateryna', 'Shevchenko', 'Oleksandrivna', '2021-08-05'),
+    ('manager', 'Serhii', 'Petrenko', 'Mykolayovych', '2019-05-12'),
+    ('server', 'Nataliya', 'Kravchenko', NULL, '2022-09-18'),
+    ('kitchen', 'Oleksandr', 'Kovalchuk', 'Vasylyovych', '2020-01-25'),
+    ('server', 'Yuliya', 'Boyko', NULL, '2023-07-03'),
+    ('kitchen', 'Mykola', 'Rudenko', 'Stepanovych', '2021-12-14'),
+    ('manager', 'Viktoriya', 'Savchenko', 'Olehivna', '2018-10-30'),
+    ('bartender', 'Roman', 'Lysenko', NULL, '2022-04-22');
 -- Insert queries for the shifts table
--- NOTE: staff_id values 1-10 assume restaurant_management.staffs is populated
 INSERT INTO restaurant_management.shifts (location_id, staff_id, start_shift, end_shift)
 VALUES (
         (
@@ -426,6 +439,254 @@ WHERE name = 'Salmon Fillet';
 -- Removing a discontinued ingredient
 DELETE FROM restaurant_management.ingredients
 WHERE name = 'Takeaway Containers';
+-- Insert queries for the restaurant_management.menu_items table
+INSERT INTO restaurant_management.menu_items (
+        name,
+        description,
+        nutrition_info,
+        weight_grams,
+        price,
+        preparation_time_min
+    )
+VALUES (
+        'Kyiv-Style Chicken Schnitzel',
+        'Breaded chicken breast cutlet, pan-fried until golden and served with a lemon wedge.',
+        '540 kcal, 32g protein, 28g fat, 38g carbs',
+        320,
+        245.00,
+        25
+    ),
+    (
+        'Margherita Pizza',
+        'Wood-fired pizza topped with mozzarella, tomato sauce, and fresh basil.',
+        '780 kcal, 28g protein, 26g fat, 95g carbs',
+        450,
+        210.00,
+        18
+    ),
+    (
+        'Grilled Salmon Fillet',
+        'Salmon fillet grilled to order and finished with olive oil and herbs.',
+        '410 kcal, 38g protein, 22g fat, 6g carbs',
+        280,
+        385.00,
+        22
+    ),
+    (
+        'Classic Borscht',
+        'Traditional beet and vegetable soup served with sour cream and rye bread.',
+        '320 kcal, 9g protein, 12g fat, 40g carbs',
+        400,
+        95.00,
+        15
+    ),
+    (
+        'Caesar Salad with Chicken',
+        'Romaine lettuce, grilled chicken, parmesan, and croutons tossed in Caesar dressing.',
+        '460 kcal, 30g protein, 28g fat, 18g carbs',
+        300,
+        165.00,
+        12
+    ),
+    (
+        'Tomato & Mozzarella Bruschetta',
+        'Toasted bread topped with diced tomatoes, fresh mozzarella, and basil.',
+        '290 kcal, 11g protein, 14g fat, 28g carbs',
+        180,
+        110.00,
+        10
+    ),
+    (
+        'Milk Pancakes with Honey',
+        'Fluffy milk-batter pancakes drizzled with honey and served with fresh fruit.',
+        '520 kcal, 14g protein, 16g fat, 78g carbs',
+        250,
+        85.00,
+        15
+    ),
+    (
+        'Cheese Omelette',
+        'Three-egg omelette folded with mozzarella cheese.',
+        '380 kcal, 22g protein, 28g fat, 6g carbs',
+        220,
+        90.00,
+        10
+    ),
+    (
+        'Wheat Bread Basket',
+        'Freshly baked wheat bread rolls served warm with butter.',
+        '210 kcal, 7g protein, 3g fat, 40g carbs',
+        150,
+        45.00,
+        5
+    ),
+    (
+        'Sparkling Lemonade',
+        'House-made lemonade with sparkling water and fresh mint.',
+        '90 kcal, 0g protein, 0g fat, 22g carbs',
+        350,
+        55.00,
+        3
+    ),
+    (
+        'Tiramisu',
+        'Classic Italian dessert with layers of mascarpone cream and espresso-soaked biscuits.',
+        '410 kcal, 6g protein, 24g fat, 42g carbs',
+        180,
+        120.00,
+        8
+    ),
+    (
+        'Salmon Tartare Appetizer',
+        'Diced fresh salmon with capers, red onion, and lemon, served as a starter.',
+        '260 kcal, 24g protein, 16g fat, 4g carbs',
+        150,
+        220.00,
+        15
+    );
+-- Insert queries for the restaurant_management.menu_item_ingredients table
+-- ingredient_id and menu_item_id resolved by name via subquery to stay valid after the ingredient DELETE above
+INSERT INTO restaurant_management.menu_item_ingredients (ingredient_id, menu_item_id, quantity_needed)
+VALUES (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Wheat Flour'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Kyiv-Style Chicken Schnitzel'),
+        0.15
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Sunflower Oil'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Kyiv-Style Chicken Schnitzel'),
+        0.05
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Chicken Eggs'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Kyiv-Style Chicken Schnitzel'),
+        0.17
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Wheat Flour'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Margherita Pizza'),
+        0.25
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Baking Yeast'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Margherita Pizza'),
+        0.01
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Mozzarella Cheese'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Margherita Pizza'),
+        0.12
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Tomatoes'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Margherita Pizza'),
+        0.10
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Salmon Fillet'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Grilled Salmon Fillet'),
+        0.28
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Sunflower Oil'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Grilled Salmon Fillet'),
+        0.02
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Tomatoes'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Classic Borscht'),
+        0.20
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Sunflower Oil'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Classic Borscht'),
+        0.03
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Tomatoes'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Tomato & Mozzarella Bruschetta'),
+        0.15
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Mozzarella Cheese'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Tomato & Mozzarella Bruschetta'),
+        0.08
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Wheat Flour'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Tomato & Mozzarella Bruschetta'),
+        0.06
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Fresh Milk'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Milk Pancakes with Honey'),
+        0.20
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Wheat Flour'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Milk Pancakes with Honey'),
+        0.18
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Chicken Eggs'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Milk Pancakes with Honey'),
+        0.08
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Chicken Eggs'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Cheese Omelette'),
+        0.25
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Mozzarella Cheese'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Cheese Omelette'),
+        0.06
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Fresh Milk'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Cheese Omelette'),
+        0.05
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Wheat Flour'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Wheat Bread Basket'),
+        0.30
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Baking Yeast'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Wheat Bread Basket'),
+        0.02
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Sunflower Oil'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Wheat Bread Basket'),
+        0.02
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Sparkling Water'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Sparkling Lemonade'),
+        0.35
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Fresh Milk'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Tiramisu'),
+        0.10
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Chicken Eggs'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Tiramisu'),
+        0.08
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Salmon Fillet'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Salmon Tartare Appetizer'),
+        0.15
+    ),
+    (
+        (SELECT ingredient_id FROM restaurant_management.ingredients WHERE name = 'Sunflower Oil'),
+        (SELECT menu_item_id FROM restaurant_management.menu_items WHERE name = 'Salmon Tartare Appetizer'),
+        0.01
+    );
 -- Insert queries for the restaurant_management.customers table
 INSERT INTO restaurant_management.customers (email, first_name, last_name, phone)
 VALUES (
