@@ -38,10 +38,17 @@ CREATE TABLE IF NOT EXISTS restaurant_management.locations (
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     coords GEOMETRY(Point, 4326) NOT NULL
 );
--- TODO add the restaurant_management.staff table before the restaurant_management.shifts
+CREATE TABLE IF NOT EXISTS restaurant_management.staff (
+    staff_id SERIAL PRIMARY KEY,
+    staff_role VARCHAR(120) NOT NULL,
+    first_name VARCHAR(80) NOT NULL,
+    last_name VARCHAR(80) NOT NULL,
+    middle_name VARCHAR(80),
+    hire_date TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
 CREATE TABLE IF NOT EXISTS restaurant_management.shifts (
     location_id INT REFERENCES restaurant_management.locations(location_id),
-    staff_id INT REFERENCES restaurant_management.staffs(staff_id),
+    staff_id INT REFERENCES restaurant_management.staff(staff_id),
     start_shift TIMESTAMPTZ NOT NULL,
     end_shift TIMESTAMPTZ NOT NULL,
     PRIMARY KEY (location_id, staff_id, start_shift, end_shift)
@@ -62,10 +69,17 @@ CREATE TABLE IF NOT EXISTS restaurant_management.ingredients (
     unit_cost NUMERIC(8, 2) NOT NULL,
     quantity_available NUMERIC(8, 2) DEFAULT 0 NOT NULL
 );
--- TODO add the restaurant_management.menu_items table before the restaurant_management.menu_item_ingredients
+CREATE TABLE IF NOT EXISTS restaurant_management.menu_items (
+    menu_item_id SERIAL PRIMARY KEY,
+    name VARCHAR(160) NOT NULL,
+    description TEXT NOT NULL,
+    nutrition_info VARCHAR(160) NOT NULL,
+    weight_grams SMALLINT NOT NULL,
+    price NUMERIC(10, 2) NOT NULL,
+    preparation_time_min SMALLINT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS restaurant_management.menu_item_ingredients (
     ingredient_id INT REFERENCES restaurant_management.ingredients(ingredient_id),
-    -- TODO add menu_item table
     menu_item_id INT REFERENCES restaurant_management.menu_items(menu_item_id),
     quantity_needed NUMERIC(8, 2) NOT NULL,
     -- Specifies composite primary key
@@ -74,8 +88,8 @@ CREATE TABLE IF NOT EXISTS restaurant_management.menu_item_ingredients (
 CREATE TABLE IF NOT EXISTS restaurant_management.customers (
     customer_id SERIAL PRIMARY KEY,
     email VARCHAR(150) UNIQUE NOT NULL,
-    first_name VARCHAR(120) NOT NULL,
-    last_name VARCHAR(120) NOT NULL,
+    first_name VARCHAR(80) NOT NULL,
+    last_name VARCHAR(80) NOT NULL,
     phone VARCHAR(25) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
